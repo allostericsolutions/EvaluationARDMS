@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 import logging
 import random
-from ascites_quiz import generate_questions, check_answer, generate_false_options, get_explanation  # Importar funciones necesarias
+from evaluation.ascites import generate_questions, check_answer, generate_false_options, get_explanation  # Importar funciones necesarias
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -133,8 +133,8 @@ def get_explanation(exam_type, question_info, is_correct, question, organ):
             f"Provide a brief explanation about {correct_organ} focusing on its anatomical location or relevant ultrasound technique."
         )
     elif exam_type == "Peritoneal or Retroperitoneal":
-        with open("prompt/peritoneal.txt", "r") as file:
-            prompt = file.read().format(organ=organ)  
+        with open("Prompts/peritoneal.txt", "r") as file:
+            prompt = file.read().format(organ=organ)
         response = client.chat.completions.create(
             model="gpt-4",  # Cambiado a gpt-4
             messages=[
