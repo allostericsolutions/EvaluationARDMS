@@ -121,7 +121,7 @@ def check_answer(exam_type, question_info, answer, question):
         correct_pathology = question_info
         return answer.lower() == correct_pathology.lower()
 
-def get_explanation(exam_type, question_info, is_correct, question, organ):
+def get_explanation(exam_type, question_info, is_correct, question, user_answer=None):
     """Get a brief explanation and a tip from GPT-4 based on the exam type."""
     if exam_type == "Echogenicity":
         organ_pair = question_info
@@ -133,7 +133,8 @@ def get_explanation(exam_type, question_info, is_correct, question, organ):
         # Use the Echogenicity prompt file
         with open("Prompts/echogenicity.txt", "r") as file:
             prompt_template = file.read()
-        prompt = prompt_template.format(correct_organ=correct_organ)
+
+        prompt = f"{prompt_template}\n\nThe user's response was '{user_answer}'. The correct answer is '{correct_organ}'. Provide an explanation based on the information in this text about why '{correct_organ}' is more echogenic than '{user_answer}'."
 
     elif exam_type == "Peritoneal or Retroperitoneal":
         with open("Prompts/peritoneal.txt", "r") as file:
@@ -256,7 +257,7 @@ def main():
                 if correct:
                     correct_count += 1
                 else:
-                    explanation = get_explanation(exam_type, question_info if exam_type != "Pathologies associated with ascites" else correct_pathology, correct, question, question_info) # Se pasa question_info como organ
+                    explanation = get_explanation(exam_type, question_info if exam_type != "Pathologies associated with ascites" else correct_pathology, correct, question, st.session_state.answers[i]) # Se pasa question_info como organ
                     incorrect_questions.append((question, st.session_state.answers[i], explanation))
 
         st.session_state.correct_count = correct_count
