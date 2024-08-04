@@ -9,7 +9,7 @@ The following information will be used to provide explanations and corrections r
 **User's response:**
 Gallbladder
 
-**Explanation:**
+**Explanation:** ( do not write down the word Explanation) 
 The pancreas is more echogenic than the gallbladder because the pancreas has a relatively high echogenicity, whereas the gallbladder typically appears as an anechoic (dark) structure when filled with bile, surrounded by a thin, echogenic wall.
 Pathology: Acute Pancreatitis may present as a hypoechoic pancreas due to inflammation and edema.
 
@@ -21,7 +21,7 @@ Pathology: Acute Pancreatitis may present as a hypoechoic pancreas due to inflam
 **User's response:**
 Renal pyramids
 
-**Explanation:**
+**Explanation:** ( do not write down the word Explanation) 
 The spleen has greater echogenicity compared to the renal pyramids. The spleen has a homogenous and moderately echogenic appearance, whereas the renal pyramids are hypoechoic compared to the renal cortex due to their fluid content.
 Pathology: Splenic infarcts can appear as hypoechoic or anechoic areas within the spleen, reflecting areas of tissue death.
 
@@ -33,7 +33,7 @@ Pathology: Splenic infarcts can appear as hypoechoic or anechoic areas within th
 **User's response:**
 Renal cortex
 
-**Explanation:**
+**Explanation:** ( do not write down the word Explanation) 
 The liver has higher echogenicity compared to the renal cortex. The liver's parenchyma exhibits a mid-level echogenicity with a homogenous texture, while the renal cortex is less echogenic and more hypoechoic.
 Pathology: Hepatic steatosis (fatty liver) typically increases echogenicity of the liver due to fat infiltration.
 
@@ -45,7 +45,7 @@ Pathology: Hepatic steatosis (fatty liver) typically increases echogenicity of t
 **User's response:**
 Liver
 
-**Explanation:**
+**Explanation:**( do not write down the word Explanation) 
 The spleen is slightly more echogenic than the liver. The spleen has a homogenous and moderately echogenic appearance, while the liver's echogenicity is mid-level and homogenous.
 Pathology: Chronic hepatitis may increase the liver's echogenicity due to fibrosis.
 
@@ -57,7 +57,7 @@ Pathology: Chronic hepatitis may increase the liver's echogenicity due to fibros
 **User's response:**
 Renal cortex
 
-**Explanation:**
+**Explanation:** ( do not write down the word Explanation) 
 The pancreas is more echogenic than the renal cortex. The pancreas has a relatively high echogenicity, while the renal cortex is hypoechoic when compared to the renal sinus.
 Pathology: Chronic pancreatitis increases the pancreas’s echogenicity due to fibrosis and calcification.
 
