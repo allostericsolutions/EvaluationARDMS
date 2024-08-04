@@ -12,7 +12,7 @@ Example:
 Diaphragm
 
 **Explanation:** ( so, question is which is less echogenic, user reponded "Diaphragm", so you respond, correct ( the other choice, in this case "liver" and explain)
-The liver is less echogenic. The diaphragm is typically more echogenic due to its fibrous and muscular composition, whereas the liver has a mid-level echogenicity with a homogenous texture. This difference in echogenicity is crucial for sonographers to recognize, as it aids in the accurate interpretation of sonographic images and the identification of potential pathologies."
+The liver is less echogenic than diaphragm  due to the  fibrous and muscular composition of this muscle, whereas the liver has a mid-level echogenicity with a homogenous texture. This difference in echogenicity is crucial for sonographers to recognize, as it aids in the accurate interpretation of sonographic images and the identification of potential pathologies."
 
 
 2. **When the question is "Which organ is more echogenic?":**
