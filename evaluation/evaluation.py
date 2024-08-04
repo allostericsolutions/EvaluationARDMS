@@ -99,7 +99,7 @@ def generate_false_options(correct_pathology, num_options=2):
             {"role": "user", "content": prompt}
         ],
         max_tokens=300,  # Cambiado a 300 tokens
-        temperature=0.7,
+        temperature=0.2,
     )
     false_options = [option.strip() for option in response.choices[0].message.content.split("\n") if option.strip()]
     return false_options
@@ -136,7 +136,7 @@ def get_explanation(exam_type, question_info, is_correct, question, organ):
         with open("Prompts/peritoneal.txt", "r") as file:
             prompt = file.read().format(organ=organ)
         response = client.chat.completions.create(
-            model="gpt-4",  # Cambiado a gpt-4
+            model="gpt-4o-mini",  
             messages=[
                 {"role": "user", "content": prompt}
             ],
