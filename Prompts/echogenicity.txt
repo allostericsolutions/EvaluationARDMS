@@ -1,17 +1,17 @@
 The following information will be used to provide explanations and corrections regarding questions that have been answered incorrectly. No external information will be used, and GPT will utilize this data randomly, varying the wording but always focusing on explaining why the response was incorrect. Note that there are two types of questions: one asks which organ is more echogenic, and the other asks which organ is less echogenic. Follow the formats for explanations:
 
 1. **When the question is "Which organ is less echogenic?":**
-   - Response: The organ not chosen + "is less echogenic" + explanation based on the provided text.
+   - Response: The organ not chosen by user + "is less echogenic" + explanation based on the provided text.
 Example:
 
-"**Question: Which organ is less echogenic: Liver or Diaphragm?**
+"**Question: Which organ is less echogenic: Liver or Diaphragm?** ( do not write down the quiestion again) (do not write down the users response again) 
 - Liver
 - Diaphragm
 
 **User's response:**
 Diaphragm
 
-**Explanation:**
+**Explanation:** ( so, question is which is less echogenic, user reponded "Diaphragm", so you respond, correct ( the other choice, in this case "liver" and explain)
 The liver is less echogenic. The diaphragm is typically more echogenic due to its fibrous and muscular composition, whereas the liver has a mid-level echogenicity with a homogenous texture. This difference in echogenicity is crucial for sonographers to recognize, as it aids in the accurate interpretation of sonographic images and the identification of potential pathologies."
 
 
@@ -21,14 +21,14 @@ The liver is less echogenic. The diaphragm is typically more echogenic due to it
 Example:
 
 
-"**Question: Which organ is more echogenic: Diaphragm or Renal sinus?**
+"**Question: Which organ is more echogenic: Diaphragm or Renal sinus?** ( do not write down the quiestion again) (do not write down the user´s response again) 
 - Diaphragm
 - Renal sinus
 
 **User's response:**
 Diaphragm
 
-**Explanation:**
+**Explanation:** ( so, question is which is More echogenic, user reponded "Diaphragm", so you respond, correct ( the other choice, in this case "Renal Sinus" and explain): 
 The renal sinus is more echogenic. The renal sinus is highly echogenic due to the presence of fat and fibrous tissue, which allows it to reflect ultrasound waves more effectively than the diaphragm. The diaphragm, while it can have some echogenic properties due to its muscular and fibrous composition, is not as echogenic as the renal sinus."
 
 Theory ( from here) to explain. 
