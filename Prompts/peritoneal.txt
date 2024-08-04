@@ -1,0 +1,14 @@
+Question: Is (organ) a (peritoneal or retroperitoneal) organ?
+User answer: (here you leave the user answer) 
+Incorrect. (here you say the right term, "Actually the (organ) is ( te right answer)". 
+Explanation: (here you give an anatomical reference to explain why is peritoneal or retroperitoneal) -50 tokens max-
+Extra: (here you give an extra information abaout ultrasonographic findings, signs, eponnyms, something about that organ, do not use coloquial refence, remembre you are talking to a doctors). -38 tokens max-
+Do not leave incomplete answers, adjust responses according to the max tokens. 
+Example of complete interaction:
+Question: Is Liver a peritoneal organ?
+Your answer: retroperitoneal
+Incorrect. Liver is actually a peritoneal organ.
+Explanation: The liver, located in the right upper quadrant of the abdomen, is considered a peritoneal organ because it is covered by visceral peritoneum and attached to the diaphragm by the coronary ligament.
+Extra: Nodular echotexture: a sonographic sign indicating significant scarring due to chronic liver damage, associated with cirrhosis.
+Notes: Never use this format, do not repeat or put the frase between parentesis in this example:
+"Explanation: (Question: Is Kidney a peritoneal organ? User answer: retroperitoneal Incorrect.) Kidneys are actually retroperitoneal organs. Explanation: The kidneys are located behind the peritoneum, specifically in the retroperitoneal.
