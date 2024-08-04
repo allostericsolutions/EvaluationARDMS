@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 import logging
 import random
-from ascites import generate_questions, check_answer, generate_false_options, get_explanation  # Importar funciones necesarias
+from ascites import generate_questions, check_answer, generate_false_options, get_explanation # Importar funciones necesarias
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -20,10 +20,10 @@ client = openai.OpenAI()
 # Streamlit Page Configuration
 st.set_page_config(
     page_title="Ultrasound Quiz",
-    page_icon="📚",  # Book icon
+    page_icon="📚", # Book icon
 )
 
-st.sidebar.title("Type of quiz")  # Title within the sidebar
+st.sidebar.title("Type of quiz") # Title within the sidebar
 
 # Lists of organs, pathologies, and associated conditions
 peritoneal_organs = [
@@ -45,8 +45,8 @@ echogenicity_order = [
 
 # List of pathologies that can cause ascites
 pathologies_with_ascites = [
-    "Abdominal trauma", "Acute cholecystitis", "Cirrhosis", 
-    "Congestive heart failure", "Ectopic pregnancy", 
+    "Abdominal trauma", "Acute cholecystitis", "Cirrhosis",
+    "Congestive heart failure", "Ectopic pregnancy",
     "Malignancy", "Portal hypertension", "Ruptured abdominal aortic aneurysm"
 ]
 
@@ -90,15 +90,15 @@ def generate_false_options(correct_pathology, num_options=2):
     """Genera opciones incorrectas para la pregunta de ascitis."""
     prompt = f"""
     Generate a list of medically plausible conditions that could be mistakenly believed to be associated with ascites, but are not. These conditions should sound complex and be named in a way that could confuse even medical students, incorporating terms from advanced medical sciences. Some conditions can be entirely fictitious but should sound like potential real medical diagnoses.
-    
+
     Provide {num_options} such conditions, distinct from: {correct_pathology}, providing only the name of each condition.
     """
     response = client.chat.completions.create(
-        model="gpt-4o-mini",  # Cambiado a gpt-4o-mini
+        model="gpt-4o-mini", # Cambiado a gpt-4o-mini
         messages=[
             {"role": "user", "content": prompt}
         ],
-        max_tokens=300,  # Cambiado a 300 tokens
+        max_tokens=300, # Cambiado a 300 tokens
         temperature=0.2,
     )
     false_options = [option.strip() for option in response.choices[0].message.content.split("\n") if option.strip()]
@@ -121,7 +121,7 @@ def check_answer(exam_type, question_info, answer, question):
         correct_pathology = question_info
         return answer.lower() == correct_pathology.lower()
 
-def get_explanation(exam_type, question_info, is_correct, question, organ): 
+def get_explanation(exam_type, question_info, is_correct, question, organ):
     """Get a brief explanation and a tip from GPT-4 based on the exam type."""
     if exam_type == "Echogenicity":
         organ_pair = question_info
@@ -129,24 +129,34 @@ def get_explanation(exam_type, question_info, is_correct, question, organ):
         correct_organ = organ_pair[0] if echogenicity_order.index(organ_pair[0]) < echogenicity_order.index(organ_pair[1]) else organ_pair[1]
         if not is_more:
             correct_organ = organ_pair[1] if correct_organ == organ_pair[0] else organ_pair[0]
-        prompt = (
-            f"Provide a brief explanation about {correct_organ} focusing on its anatomical location or relevant ultrasound technique."
-        )
+        
+        # Use the Echogenicity prompt file
+        with open("Prompts/echogenicity.txt", "r") as file:
+            prompt_template = file.read()
+        prompt = prompt_template.format(correct_organ=correct_organ)
+
     elif exam_type == "Peritoneal or Retroperitoneal":
         with open("Prompts/peritoneal.txt", "r") as file:
             prompt = file.read().format(organ=organ)
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",  
-            messages=[
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=300,  # Cambiado a 300 tokens
-            temperature=0.2,
+
+    elif exam_type == "Pathologies associated with ascites":
+        correct_pathology = question_info
+        prompt = (
+            f"Provide a brief explanation about {correct_pathology} focusing on its relation with ascites or relevant ultrasound findings."
         )
+    
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",  # Cambiado a gpt-4o-mini
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=300,  # Cambiado a 300 tokens
+        temperature=0.2,
+    )
+    explanation = response.choices[0].message.content.strip()
+    explanation = explanation.replace(" - ", "\n - ")
 
-        explanation = response.choices[0].message.content.strip()
-        explanation = explanation.replace(" - ", "\n - ")
-
+    if exam_type == "Peritoneal or Retroperitoneal":
         extra_prompt = f"Provide an extra, complex medical detail related to {organ}."
         extra_response = client.chat.completions.create(
             model="gpt-4",  # Cambiado a gpt-4
@@ -156,47 +166,27 @@ def get_explanation(exam_type, question_info, is_correct, question, organ):
             max_tokens=300,  # Cambiado a 300 tokens
             temperature=0.2,
         )
-
         extra = extra_response.choices[0].message.content.strip()
         extra = extra.replace(" - ", "\n - ")
-        
         if is_correct:
             return f"**<span style='color: green;'>Correct!</span>**\n{organ} is a peritoneal organ.\n\n**<span style='color: blue;'>Explanation:</span>**\n{explanation}\n\n**<span style='color: blue;'>Extra:</span>**\n{extra}"
         else:
             return f"**<span style='color: red;'>Incorrect.</span>**\n{organ} is actually a retroperitoneal organ.\n\n**<span style='color: blue;'>Explanation:</span>**\n{explanation}\n\n**<span style='color: blue;'>Extra:</span>**\n{extra}"
-    elif exam_type == "Pathologies associated with ascites":
-        correct_pathology = question_info
-        prompt = (
-            f"Provide a brief explanation about {correct_pathology} focusing on its relation with ascites or relevant ultrasound findings."
-        )
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",  # Cambiado a gpt-4o-mini
-        messages=[
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=300,  # Cambiado a 300 tokens
-        temperature=0.2,
-    )
-
-    explanation = response.choices[0].message.content.strip()
-    explanation = explanation.replace(" - ", "\n - ")
     return f"**<span style='color: blue;'>Explanation:</span>**\n{explanation}"
 
 def main():
     """Main function to run the Streamlit app."""
     exam_type = st.sidebar.selectbox(
-        "Select the type of quiz",
-        ("Echogenicity", "Peritoneal or Retroperitoneal", "Pathologies associated with ascites")
+        "Select the type of quiz", ("Echogenicity", "Peritoneal or Retroperitoneal", "Pathologies associated with ascites")
     )
-
     st.header("Ultrasound Quiz")
 
     # Initialize session state on first run or when changing exam type
     if "questions" not in st.session_state or st.session_state.exam_type != exam_type:
         st.session_state.exam_type = exam_type
         st.session_state.questions = generate_questions(exam_type)
-        st.session_state.answers = [None] * len(st.session_state.questions)  # to store user answers
+        st.session_state.answers = [None] * len(st.session_state.questions) # to store user answers
         st.session_state.correct_count = 0
         st.session_state.feedback = ""
         st.session_state.explanations = []
@@ -223,7 +213,7 @@ def main():
             else:
                 st.markdown(f"<b>Your answer:</b> <span style='color: blue;'>{st.session_state.answers[idx]}</span>", unsafe_allow_html=True)
         else:
-            question, question_info = item  # Se utiliza question_info para obtener el órgano
+            question, question_info = item # Se utiliza question_info para obtener el órgano
             formatted_question = question.replace(" (Yes/No)", "")
             st.markdown(f"<h4 style='color: orange;'>{formatted_question}</h4>", unsafe_allow_html=True)
             if st.session_state.answers[idx] is None:
@@ -249,6 +239,7 @@ def main():
     if all(answer is not None for answer in st.session_state.answers) and not st.session_state.graded:
         incorrect_questions = []
         correct_count = 0
+
         for i, item in enumerate(st.session_state.questions):
             if st.session_state.answers[i] is not None:
                 # Inicializar las variables para evitar UnboundLocalError
@@ -259,31 +250,32 @@ def main():
                     question, correct_pathology, all_pathologies = item
                     correct = check_answer(exam_type, correct_pathology, st.session_state.answers[i], question)
                 else:
-                    question, question_info = item  # Se utiliza question_info para obtener el órgano
+                    question, question_info = item # Se utiliza question_info para obtener el órgano
                     correct = check_answer(exam_type, question_info, st.session_state.answers[i], question)
+
                 if correct:
                     correct_count += 1
                 else:
-                    explanation = get_explanation(exam_type, question_info if exam_type != "Pathologies associated with ascites" else correct_pathology, correct, question, question_info)  # Se pasa question_info como organ
+                    explanation = get_explanation(exam_type, question_info if exam_type != "Pathologies associated with ascites" else correct_pathology, correct, question, question_info) # Se pasa question_info como organ
                     incorrect_questions.append((question, st.session_state.answers[i], explanation))
 
         st.session_state.correct_count = correct_count
         st.session_state.explanations = incorrect_questions
         st.session_state.graded = True
 
-        total_questions = len(st.session_state.questions)
-        score = (st.session_state.correct_count / total_questions) * 100
-        st.markdown(f"### Tu puntaje es: {score:.2f}/100")
+    total_questions = len(st.session_state.questions)
+    score = (st.session_state.correct_count / total_questions) * 100
+    st.markdown(f"### Tu puntaje es: {score:.2f}/100")
 
-        if st.session_state.explanations:
-            st.markdown("### Revisión de respuestas incorrectas:")
-            for q, ans, exp in st.session_state.explanations:
-                st.markdown(f"<b>**Pregunta:**</b> {q}", unsafe_allow_html=True)
-                st.markdown(f"<b>**Tu respuesta:**</b> <span style='color: blue;'>{ans}</span>", unsafe_allow_html=True)
-                st.markdown(exp, unsafe_allow_html=True)
+    if st.session_state.explanations:
+        st.markdown("### Revisión de respuestas incorrectas:")
+        for q, ans, exp in st.session_state.explanations:
+            st.markdown(f"<b>**Pregunta:**</b> {q}", unsafe_allow_html=True)
+            st.markdown(f"<b>**Tu respuesta:**</b> <span style='color: blue;'>{ans}</span>", unsafe_allow_html=True)
+            st.markdown(exp, unsafe_allow_html=True)
 
     # Reset quiz button
-    if st.button("Reiniciar Quiz - Haz clic dos veces", key="reset", use_container_width=True, on_click=lambda: st.session_state.clear()):  
+    if st.button("Reiniciar Quiz - Haz clic dos veces", key="reset", use_container_width=True, on_click=lambda: st.session_state.clear()):
         st.session_state.clear()
 
 if __name__ == "__main__":
