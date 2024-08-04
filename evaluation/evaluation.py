@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 import logging
 import random
-from evaluation.ascites import generate_questions, check_answer, generate_false_options, get_explanation  # Importar funciones necesarias
+from ascites import generate_questions, check_answer, generate_false_options, get_explanation  # Importar funciones necesarias
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
