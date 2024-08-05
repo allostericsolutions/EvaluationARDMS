@@ -121,22 +121,6 @@ def check_answer(exam_type, question_info, answer, question):
         correct_pathology = question_info
         return answer.lower() == correct_pathology.lower()
 
-# Código original
-#def get_explanation(exam_type, question_info, is_correct, question, user_answer=None):
-#    """Get a brief explanation and a tip from GPT-4 based on the exam type."""
-#    if exam_type == "Echogenicity":
-#        organ_pair = question_info
-#        is_more = "more" in question
-#        correct_organ = organ_pair[0] if echogenicity_order.index(organ_pair[0]) < echogenicity_order.index(organ_pair[1]) else organ_pair[1]
-#        if not is_more:
-#            correct_organ = organ_pair[1] if correct_organ == organ_pair[0] else organ_pair[0]
-#        
-#        # Use the Echogenicity prompt file
-#        with open("Prompts/echogenicity.txt", "r") as file:
-#            prompt_template = file.read()
-#
-#        prompt = f"{prompt_template}\n\nThe user's response was '{user_answer}'. The correct answer is '{correct_organ}'. Provide an explanation based on the information in this text about why '{correct_organ}' is more echogenic than '{user_answer}'."
-
 # Código modificado
 def get_explanation(exam_type, question_info, is_correct, question, user_answer=None):
     """Get a brief explanation and a tip from GPT-4 based on the exam type."""
@@ -152,6 +136,14 @@ def get_explanation(exam_type, question_info, is_correct, question, user_answer=
             prompt_template = file.read()
 
         comparison_text = "more echogenic" if is_more else "less echogenic"
+        
+        # Debugging information for understanding the context
+        print(f"Question: {question}")
+        print(f"Is More: {is_more}")
+        print(f"Correct Organ: {correct_organ}")
+        print(f"User Answer: {user_answer}")
+        print(f"Comparison Text: {comparison_text}")
+        
         prompt = f"{prompt_template}\n\nThe user's response was '{user_answer}'. The correct answer is '{correct_organ}'. Provide an explanation based on the information in this text about why '{correct_organ}' is {comparison_text} than '{user_answer}'."
 
     elif exam_type == "Peritoneal or Retroperitoneal":
