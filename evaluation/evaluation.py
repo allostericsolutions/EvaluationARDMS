@@ -282,7 +282,7 @@ def main():
         st.markdown("### Revisión de respuestas incorrectas:")
         for q, ans, exp in st.session_state.explanations:
             st.markdown(f"<b>**Pregunta:**</b> {q}", unsafe_allow_html=True)
-            st.markdown(f"<b>**Tu respuesta:**</b> <span style='color: blue;'>{ans}</span>", unsafe_allow_html=True)
+            st.markdown(f"<b>**Your answer:**</b> <span style='color: blue;'>{ans}</span>", unsafe_allow_html=True)
             st.markdown(exp, unsafe_allow_html=True)
 
     # Reset quiz button
