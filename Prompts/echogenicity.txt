@@ -66,4 +66,4 @@ Chronic pancreatitis: The pancreas may appear hyperechoic compared to the liver,
 Diaphragm:
 Pleural effusion: The diaphragm may appear less echogenic than the liver or difficult to differentiate from the surrounding lung tissue, often requiring careful evaluation.
 
-The reponse example will include, explanation, max 50 tokens, and "Extra" ( give a random information based on the text egarded to signs, pathology, etc) 
+The reponse example will include, explanation,  50 - 80 tokens, and "Extra" 40 - 50 tokens ( give a random information based on the text egarded to signs, pathology, etc) 
