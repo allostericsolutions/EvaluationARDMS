@@ -7,7 +7,6 @@ def configure_openai():
         st.error("Please add your OpenAI API key to the Streamlit secrets.toml file.")
         st.stop()
     openai.api_key = OPENAI_API_KEY
-    # Return the OpenAI client (note: OpenAI client instantiation is straightforward)
     return openai
 
 def load_prompt_from_file(file_path):
@@ -40,18 +39,22 @@ def chatbot_interface():
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
 
-    user_input = st.text_input("You: ", key="input", placeholder="Write your question here...")
+    if 'submitted' not in st.session_state:
+        st.session_state.submitted = False
 
-    if user_input and st.session_state.get('submitted', False) == False:
+    # Verifica si se ha enviado un mensaje y se limpia el estado
+    user_input_temp = st.text_input("You: ", key="input", placeholder="Write your question here...")
+
+    if user_input_temp and not st.session_state.submitted:
+        st.session_state.user_input = user_input_temp
         with st.spinner("Chatbot is typing..."):
-            response = interact_with_chatbot(user_input, prompt)
-            st.session_state.chat_history.append({"user": user_input, "bot": response})
-            # Clear user input and mark as submitted
-            st.session_state.input = ""
+            response = interact_with_chatbot(st.session_state.user_input, prompt)
+            st.session_state.chat_history.append({"user": st.session_state.user_input, "bot": response})
             st.session_state.submitted = True
 
-    if 'submitted' in st.session_state and st.session_state.submitted:
-        st.session_state.submitted = False
+    if st.session_state.submitted:
+        # Limpiamos el campo de entrada sin tocar directamente la clave del text_input
+        st.experimental_rerun()  # Rerun para limpiar campos y actualizar la interfaz
 
     if st.session_state.chat_history:
         for chat in st.session_state.chat_history:
