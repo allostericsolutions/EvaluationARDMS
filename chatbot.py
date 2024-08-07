@@ -43,9 +43,11 @@ def chatbot_interface():
     # Crea un espacio vacío para el spinner
     spinner = st.empty()
 
+    # Define el campo de texto usando la clave 'input'
     user_input = st.text_input("You: ", key="input", placeholder="Write your question here...")
 
     def on_text_change():
+        # Accede al valor del campo usando la clave 'input'
         user_input = st.session_state.input
         if user_input:
             spinner.text("Chatbot is typing...")
