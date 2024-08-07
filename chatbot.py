@@ -42,19 +42,15 @@ def chatbot_interface():
     if 'submitted' not in st.session_state:
         st.session_state.submitted = False
 
-    # Verifica si se ha enviado un mensaje y se limpia el estado
     user_input_temp = st.text_input("You: ", key="input", placeholder="Write your question here...")
 
-    if user_input_temp and not st.session_state.submitted:
-        st.session_state.user_input = user_input_temp
-        with st.spinner("Chatbot is typing..."):
+    # El spinner se coloca fuera del if
+    with st.spinner("Chatbot is typing..."):
+        if user_input_temp and not st.session_state.submitted:
+            st.session_state.user_input = user_input_temp
             response = interact_with_chatbot(st.session_state.user_input, prompt)
             st.session_state.chat_history.append({"user": st.session_state.user_input, "bot": response})
             st.session_state.submitted = True
-
-    if st.session_state.submitted:
-        # Limpiamos el campo de entrada sin tocar directamente la clave del text_input
-        st.experimental_rerun()  # Rerun para limpiar campos y actualizar la interfaz
 
     if st.session_state.chat_history:
         for chat in st.session_state.chat_history:
