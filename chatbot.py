@@ -20,7 +20,6 @@ def interact_with_chatbot(prompt):
     chatbot_response = response.choices[0].message.content.strip()
     return chatbot_response
 
-# Definir la función principal para la interfaz del chatbot
 def chatbot_interface():
     st.title("Medical Chatbot")
     
@@ -39,8 +38,3 @@ def chatbot_interface():
         for chat in st.session_state.chat_history:
             st.write(f"You: {chat['user']}")
             st.write(f"Bot: {chat['bot']}")
-
-
-# Este archivo puede ser llamado directamente para probarlo
-if __name__ == "__main__":
-    chatbot_interface()
