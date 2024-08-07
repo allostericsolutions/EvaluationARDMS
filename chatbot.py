@@ -1,5 +1,6 @@
 import openai
 import streamlit as st
+import time
 
 def configure_openai():
     OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", None)
@@ -39,19 +40,16 @@ def chatbot_interface():
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
 
-    if 'submitted' not in st.session_state:
-        st.session_state.submitted = False
+    # Define la función que se ejecutará cuando cambie el texto
+    def on_text_change():
+        user_input = st.session_state.user_input
+        if user_input:
+            # Espera un poco para que el usuario termine de escribir
+            time.sleep(1)  
+            response = interact_with_chatbot(user_input, prompt)
+            st.session_state.chat_history.append({"user": user_input, "bot": response})
 
-    user_input_temp = st.text_input("You: ", key="input", placeholder="Write your question here...")
-
-    # El spinner se coloca fuera del if
-    with st.spinner("Chatbot is typing..."):
-        if user_input_temp and not st.session_state.submitted:
-            # Define user_input dentro del if
-            st.session_state.user_input = user_input_temp  
-            response = interact_with_chatbot(st.session_state.user_input, prompt)
-            st.session_state.chat_history.append({"user": st.session_state.user_input, "bot": response})
-            st.session_state.submitted = True
+    user_input = st.text_input("You: ", key="input", on_change=on_text_change, placeholder="Write your question here...")
 
     if st.session_state.chat_history:
         for chat in st.session_state.chat_history:
