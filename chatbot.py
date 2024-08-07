@@ -47,7 +47,8 @@ def chatbot_interface():
     # El spinner se coloca fuera del if
     with st.spinner("Chatbot is typing..."):
         if user_input_temp and not st.session_state.submitted:
-            st.session_state.user_input = user_input_temp
+            # Define user_input dentro del if
+            st.session_state.user_input = user_input_temp  
             response = interact_with_chatbot(st.session_state.user_input, prompt)
             st.session_state.chat_history.append({"user": st.session_state.user_input, "bot": response})
             st.session_state.submitted = True
