@@ -1,7 +1,7 @@
+import openai
 import streamlit as st
 import random
 import logging
-from some_existing_module import generate_questions, check_answer, generate_false_options, get_explanation  # Ajusta este import según tu módulo existente
 from chatbot import chatbot_interface  # Importar la interfaz del chatbot
 
 # Configurar OpenAI
@@ -37,6 +37,7 @@ pathologies_with_ascites = [
     "Portal hypertension", "Ruptured abdominal aortic aneurysm"
 ]
 
+# Funciones relevantes movidas aquí
 def generate_questions(exam_type, num_questions=5):
     questions = []
     if exam_type == "Echogenicity":
@@ -64,6 +65,17 @@ def generate_questions(exam_type, num_questions=5):
             questions.append((question, correct_pathology, all_pathologies))
     return questions
 
+def generate_false_options(client, correct_pathology, num_options=2):
+    prompt = f""" Generate a list of medically plausible conditions that could be mistakenly believed to be associated with ascites, but are not. These conditions should sound complex and be named in a way that could confuse even medical students, incorporating terms from advanced medical sciences. Some conditions can be entirely fictitious but should sound like potential real medical diagnoses. Provide {num_options} such conditions, distinct from: {correct_pathology}, providing only the name of each condition. """
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",  # Cambiado a gpt-4o-mini
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=300,  # Cambiado a 300 tokens
+        temperature=0.2,
+    )
+    false_options = [option.strip() for option in response.choices[0].message.content.split("\n") if option.strip()]
+    return false_options
+
 def check_answer(exam_type, question_info, answer, question):
     if exam_type == "Echogenicity":
         organ_pair = question_info
@@ -80,11 +92,41 @@ def check_answer(exam_type, question_info, answer, question):
         correct_pathology = question_info
         return answer.lower() == correct_pathology.lower()
 
+def get_explanation(client, exam_type, question_info, is_correct, question, user_answer=None):
+    if exam_type == "Echogenicity":
+        organ_pair = question_info
+        is_more = "more" in question
+        correct_organ = organ_pair[0] if echogenicity_order.index(organ_pair[0]) < echogenicity_order.index(organ_pair[1]) else organ_pair[1]
+        if not is_more:
+            correct_organ = organ_pair[1] if correct_organ == organ_pair[0] else organ_pair[0]
+        with open("Prompts/echogenicity.txt", "r") as file:
+            prompt_template = file.read()
+        comparison_text = "more echogenic" if is_more else "less echogenic"
+        prompt = f"{prompt_template}\n\nThe user's response was '{user_answer}'. The correct answer is '{correct_organ}'. Provide an explanation based on the information in this text about why '{correct_organ}' is {comparison_text} than '{user_answer}'."
+    
+    elif exam_type == "Peritoneal or Retroperitoneal":
+        organ = question_info
+        with open("Prompts/peritoneal.txt", "r") as file:
+            prompt = file.read().format(organ=organ)
+    
+    elif exam_type == "Pathologies associated with ascites":
+        correct_pathology = question_info
+        prompt = (f"Provide a brief explanation about {correct_pathology} focusing on its relation with ascites or relevant ultrasound findings.")
+    
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=300,
+        temperature=0.2,
+    )
+    explanation = response.choices[0].message.content.strip()
+    explanation = explanation.replace(" - ", "\n - ")
+    return explanation
+
 def main():
     st.sidebar.title("Type of quiz")
 
-    # Agregar selector de modo en el sidebar
-    mode = st.sidebar.selectbox("Select Mode", ["Quiz", "Chatbot"]) 
+    mode = st.sidebar.selectbox("Select Mode", ["Quiz", "Chatbot"])
 
     if mode == "Quiz":
         exam_type = st.sidebar.selectbox(
