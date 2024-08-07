@@ -37,8 +37,9 @@ def chatbot_interface():
 
     prompt = load_prompt_from_file("Prompts/chatbot.txt")
 
+    # Inicializa chat_history al principio
     if 'chat_history' not in st.session_state:
-        st.session_state.chat_history = []
+        st.session_state.chat_history = [] 
 
     # Define la función que se ejecutará cuando cambie el texto
     def on_text_change():
