@@ -9,32 +9,50 @@ def configure_openai():
     openai.api_key = OPENAI_API_KEY
     return openai.OpenAI()
 
-def interact_with_chatbot(prompt):
+def load_prompt_from_file(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            prompt = file.read().strip()
+        return prompt
+    except FileNotFoundError:
+        st.error(f"File not found: {file_path}")
+        st.stop()
+
+def interact_with_chatbot(user_input, prompt):
     client = configure_openai()
+    messages = [{"role": "system", "content": prompt}, {"role": "user", "content": user_input}]
     response = client.chat.completions.create(
-        model="gpt-4",  # Usaremos un modelo adecuado para el chatbot
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=150,  # Limitar los tokens para mantener las respuestas concisas
-        temperature=0.7,  # Ajustar la creatividad de la respuesta
+        model="gpt-4",
+        messages=messages,
+        max_tokens=150,
+        temperature=0.7,
     )
     chatbot_response = response.choices[0].message.content.strip()
     return chatbot_response
 
 def chatbot_interface():
-    st.title("Medical Chatbot")
-    
+    st.title("Waves Assitant")
+
+    # Load prompt from file
+    prompt = load_prompt_from_file("Prompts/chatbot.txt")
+
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
 
     user_input = st.text_input("You: ", key="input", placeholder="Write your question here...")
 
-    if st.button("Send"):
-        if user_input:
-            with st.spinner("Chatbot is typing..."):
-                response = interact_with_chatbot(user_input)
-                st.session_state.chat_history.append({"user": user_input, "bot": response})
-    
+    if user_input:
+        with st.spinner("Chatbot is typing..."):
+            response = interact_with_chatbot(user_input, prompt)
+            st.session_state.chat_history.append({"user": user_input, "bot": response})
+        
+        # Clear text input after sending the message
+        st.experimental_rerun()
+
     if st.session_state.chat_history:
         for chat in st.session_state.chat_history:
             st.write(f"You: {chat['user']}")
             st.write(f"Bot: {chat['bot']}")
+
+if __name__ == "__main__":
+    chatbot_interface()
