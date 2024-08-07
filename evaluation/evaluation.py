@@ -2,6 +2,11 @@ import openai
 import streamlit as st
 import random
 import logging
+import sys
+import os
+
+# Añadir la ruta del directorio raíz a sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from chatbot import chatbot_interface  # Importar la interfaz del chatbot
 
 # Configurar OpenAI
