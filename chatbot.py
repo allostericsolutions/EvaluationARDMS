@@ -39,16 +39,18 @@ def chatbot_interface():
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
 
-    user_input = st.text_input("You: ", key="input", placeholder="Write your question here...")
-
-    if user_input:
-        with st.spinner("Chatbot is typing..."):
+    # Define la función que se ejecutará cuando cambie el texto
+    def on_text_change():
+        # Define user_input dentro del if
+        user_input = st.session_state.input  
+        if user_input:
             response = interact_with_chatbot(user_input, prompt)
             st.session_state.chat_history.append({"role": "user", "content": user_input})
             st.session_state.chat_history.append({"role": "assistant", "content": response})
-
             # Limpia el campo de entrada
             st.session_state.input = '' 
+
+    user_input = st.text_input("You: ", key="input", on_change=on_text_change, placeholder="Write your question here...")
 
     if st.session_state.chat_history:
         for chat in st.session_state.chat_history:
