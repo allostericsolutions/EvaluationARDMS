@@ -31,7 +31,7 @@ def interact_with_chatbot(user_input, prompt):
     return chatbot_response
 
 def chatbot_interface():
-    st.title("Waves Assitant")
+    st.title("Waves")
 
     # Load prompt from file
     prompt = load_prompt_from_file("Prompts/chatbot.txt")
@@ -39,15 +39,25 @@ def chatbot_interface():
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
 
+    if 'user_input' not in st.session_state:
+        st.session_state.user_input = ""
+
     user_input = st.text_input("You: ", key="input", placeholder="Write your question here...")
 
+    # Check if there was a change in text input
     if user_input:
+        st.session_state.user_input = user_input
+
+    user_input = st.session_state.user_input
+
+    if st.session_state.user_input and st.button("Submit", key="submit_button"):
         with st.spinner("Chatbot is typing..."):
             response = interact_with_chatbot(user_input, prompt)
             st.session_state.chat_history.append({"user": user_input, "bot": response})
-        
-        # Clear text input after sending the message
-        st.experimental_rerun()
+
+        # Clear the input field after sending the message
+        st.session_state.user_input = ""
+        st.experimental_rerun()  # This is safe after a button press
 
     if st.session_state.chat_history:
         for chat in st.session_state.chat_history:
